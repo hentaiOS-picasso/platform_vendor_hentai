@@ -1,8 +1,6 @@
 # vars for use by utils
 # the following are already defined in build/make:
 # empty space comma newline pound backslash
-empty :=
-space := $(empty) $(empty)
 colon := $(empty):$(empty)
 underscore := $(empty)_$(empty)
 
