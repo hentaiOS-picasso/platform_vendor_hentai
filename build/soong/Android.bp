@@ -18,3 +18,10 @@ surfaceflinger_fod_lib {
         },
     },
 }
+bootstrap_go_package {
+    name: "soong-hentai",
+    pkgPath: "hentai/soong/android",
+    srcs: [
+        "android/variable.go",
+    ],
+}
