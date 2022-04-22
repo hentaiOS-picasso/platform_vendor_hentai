@@ -7,4 +7,4 @@ endif
 include vendor/hentai/config/BoardConfigSoong.mk
 
 # Kernel
-include vendor/acme/config/BoardConfigKernel.mk
+include vendor/hentai/config/BoardConfigKernel.mk

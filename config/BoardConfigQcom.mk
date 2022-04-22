@@ -1,21 +1,31 @@
-# Platform names
-KONA := kona #SM8250
-LITO := lito #SM7250
-MSMNILE := msmnile #SM8150
-MSMSTEPPE := sm6150
-TRINKET := trinket #SM6125
-ATOLL := atoll #SM6250
+# Bring in Qualcomm helper macros
+include vendor/hentai/build/core/qcom_utils.mk
 
+B_FAMILY := msm8226 msm8610 msm8974
+B64_FAMILY := msm8992 msm8994
+BR_FAMILY := msm8909 msm8916
+UM_3_18_FAMILY := msm8937 msm8953 msm8996
 UM_4_4_FAMILY := msm8998 sdm660
-UM_4_9_FAMILY := sdm845 sdm710
-UM_4_14_FAMILY := $(MSMNILE) $(MSMSTEPPE) $(TRINKET) $(ATOLL)
-UM_4_19_FAMILY := $(KONA) $(LITO)
-UM_PLATFORMS := $(UM_4_4_FAMILY) $(UM_4_9_FAMILY) $(UM_4_14_FAMILY) $(UM_4_19_FAMILY)
+UM_4_9_FAMILY := sdm845
+UM_PLATFORMS := $(UM_3_18_FAMILY) $(UM_4_4_FAMILY) $(UM_4_9_FAMILY)
 
 BOARD_USES_ADRENO := true
 
+# UM platforms no longer need this set on O+
+ifneq ($(call is-board-platform-in-list, $(UM_PLATFORMS)),true)
+TARGET_USES_QCOM_BSP := true
+endif
+
 # Tell HALs that we're compiling an AOSP build with an in-line kernel
 TARGET_COMPILE_WITH_MSM_KERNEL := true
+
+ifneq ($(filter msm7x27a msm7x30 msm8660 msm8960,$(TARGET_BOARD_PLATFORM)),)
+TARGET_USES_QCOM_BSP_LEGACY := true
+# Enable legacy audio functions
+ifeq ($(BOARD_USES_LEGACY_ALSA_AUDIO),true)
+    USE_CUSTOM_AUDIO_POLICY := 1
+endif
+endif
 
 # Enable media extensions
 TARGET_USES_MEDIA_EXTENSIONS := true
@@ -24,40 +34,50 @@ TARGET_USES_MEDIA_EXTENSIONS := true
 TARGET_USES_QCOM_MM_AUDIO := true
 
 # Enable color metadata for every UM platform
+ifeq ($(call is-board-platform-in-list, $(UM_PLATFORMS)),true)
 TARGET_USES_COLOR_METADATA := true
+endif
 
 # Enable DRM PP driver on UM platforms that support it
-ifneq ($(filter $(UM_4_9_FAMILY) $(UM_4_14_FAMILY) $(UM_4_19_FAMILY),$(TARGET_BOARD_PLATFORM)),)
-    TARGET_USES_DRM_PP := true
+ifeq ($(call is-board-platform-in-list, $(UM_4_9_FAMILY)),true)
+TARGET_USES_DRM_PP := true
 endif
 
 # List of targets that use master side content protection
-MASTER_SIDE_CP_TARGET_LIST := msm8996 $(UM_4_4_FAMILY) $(UM_4_9_FAMILY) $(UM_4_14_FAMILY) $(UM_4_19_FAMILY)
+MASTER_SIDE_CP_TARGET_LIST := msm8996 msm8998 sdm660 sdm845
 
-ifneq ($(filter $(UM_4_4_FAMILY),$(TARGET_BOARD_PLATFORM)),)
-    MSM_VIDC_TARGET_LIST := $(UM_4_4_FAMILY)
-    QCOM_HARDWARE_VARIANT := msm8998
-else ifneq ($(filter $(UM_4_9_FAMILY),$(TARGET_BOARD_PLATFORM)),)
-    MSM_VIDC_TARGET_LIST := $(UM_4_9_FAMILY)
-    QCOM_HARDWARE_VARIANT := sdm845
-else ifneq ($(filter $(UM_4_14_FAMILY),$(TARGET_BOARD_PLATFORM)),)
-    MSM_VIDC_TARGET_LIST := $(UM_4_14_FAMILY)
-    QCOM_HARDWARE_VARIANT := sm8150
-else ifneq ($(filter $(UM_4_19_FAMILY),$(TARGET_BOARD_PLATFORM)),)
-    MSM_VIDC_TARGET_LIST := $(UM_4_19_FAMILY)
-    QCOM_HARDWARE_VARIANT := sm8250
+ifeq ($(call is-board-platform-in-list, $(B_FAMILY)),true)
+MSM_VIDC_TARGET_LIST := $(B_FAMILY)
+QCOM_HARDWARE_VARIANT := msm8974
 else
-    MSM_VIDC_TARGET_LIST := $(TARGET_BOARD_PLATFORM)
-    QCOM_HARDWARE_VARIANT := $(TARGET_BOARD_PLATFORM)
+ifeq ($(call is-board-platform-in-list, $(B64_FAMILY)),true)
+MSM_VIDC_TARGET_LIST := $(B64_FAMILY)
+QCOM_HARDWARE_VARIANT := msm8994
+else
+ifeq ($(call is-board-platform-in-list, $(BR_FAMILY)),true)
+MSM_VIDC_TARGET_LIST := $(BR_FAMILY)
+QCOM_HARDWARE_VARIANT := msm8916
+else
+ifeq ($(call is-board-platform-in-list, $(UM_3_18_FAMILY)),true)
+MSM_VIDC_TARGET_LIST := $(UM_3_18_FAMILY)
+QCOM_HARDWARE_VARIANT := msm8996
+else
+ifeq ($(call is-board-platform-in-list, $(UM_4_4_FAMILY)),true)
+MSM_VIDC_TARGET_LIST := $(UM_4_4_FAMILY)
+QCOM_HARDWARE_VARIANT := msm8998
+else
+ifeq ($(call is-board-platform-in-list, $(UM_4_9_FAMILY)),true)
+MSM_VIDC_TARGET_LIST := $(UM_4_9_FAMILY)
+QCOM_HARDWARE_VARIANT := sdm845
+else
+MSM_VIDC_TARGET_LIST := $(TARGET_BOARD_PLATFORM)
+QCOM_HARDWARE_VARIANT := $(TARGET_BOARD_PLATFORM)
 endif
-
-# Allow a device to manually override which HALs it wants to use
-ifneq ($(OVERRIDE_QCOM_HARDWARE_VARIANT),)
-    QCOM_HARDWARE_VARIANT := $(OVERRIDE_QCOM_HARDWARE_VARIANT)
 endif
-
-PRODUCT_SOONG_NAMESPACES += \
-    hardware/qcom-caf/$(QCOM_HARDWARE_VARIANT)
+endif
+endif
+endif
+endif
 
 # QCOM HW crypto
 ifeq ($(TARGET_HW_DISK_ENCRYPTION),true)
