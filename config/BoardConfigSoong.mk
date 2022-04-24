@@ -69,3 +69,7 @@ SOONG_CONFIG_hentaiQcomVars_qcom_display_headers_namespace := vendor/qcom/openso
 else
 SOONG_CONFIG_hentaiQcomVars_qcom_display_headers_namespace := $(QCOM_SOONG_NAMESPACE)/display
 endif
+
+ifneq ($(TARGET_USES_NQ_NFC),true)
+PRODUCT_SOONG_NAMESPACES += hardware/nxp
+endif #TARGET_USES_NQ_NFC
