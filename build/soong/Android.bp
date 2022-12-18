@@ -46,7 +46,7 @@ cc_library_headers {
 soong_config_module_type {
     name: "gralloc_10_usage_bits",
     module_type: "cc_defaults",
-    config_namespace: "acmeGlobalVars",
+    config_namespace: "hentaiGlobalVars",
     value_variables: ["additional_gralloc_10_usage_bits"],
     properties: ["cppflags"],
 }
@@ -63,7 +63,7 @@ gralloc_10_usage_bits {
 soong_config_module_type {
     name: "target_process_sdk_version_overrides",
     module_type: "cc_defaults",
-    config_namespace: "acmeGlobalVars",
+    config_namespace: "hentaiGlobalVars",
     value_variables: ["target_process_sdk_version_override"],
     properties: ["cppflags"],
 }
@@ -80,7 +80,7 @@ target_process_sdk_version_overrides {
 soong_config_module_type {
     name: "target_shim_libs",
     module_type: "cc_defaults",
-    config_namespace: "acmeGlobalVars",
+    config_namespace: "hentaiGlobalVars",
     value_variables: ["target_ld_shim_libs"],
     properties: ["cppflags"],
 }
@@ -97,7 +97,7 @@ target_shim_libs {
 soong_config_module_type {
     name: "vendor_init",
     module_type: "cc_defaults",
-    config_namespace: "acmeGlobalVars",
+    config_namespace: "hentaiGlobalVars",
     value_variables: ["target_init_vendor_lib"],
     properties: ["whole_static_libs"],
 }
@@ -114,7 +114,7 @@ vendor_init {
 soong_config_module_type {
     name: "surfaceflinger_udfps_lib",
     module_type: "cc_defaults",
-    config_namespace: "acmeGlobalVars",
+    config_namespace: "hentaiGlobalVars",
     value_variables: ["target_surfaceflinger_udfps_lib"],
     properties: [
         "cppflags",
@@ -136,7 +136,7 @@ surfaceflinger_udfps_lib {
 soong_config_module_type {
     name: "librmnetctl_pre_uplink",
     module_type: "cc_defaults",
-    config_namespace: "acmeQcomVars",
+    config_namespace: "hentaiQcomVars",
     bool_variables: ["uses_pre_uplink_features_netmgrd"],
     properties: ["cflags"],
 }
@@ -153,7 +153,7 @@ librmnetctl_pre_uplink {
 soong_config_module_type {
     name: "extended_compress_format",
     module_type: "cc_defaults",
-    config_namespace: "acmeQcomVars",
+    config_namespace: "hentaiQcomVars",
     bool_variables: ["supports_extended_compress_format"],
     properties: ["cflags"],
 }
@@ -170,7 +170,7 @@ extended_compress_format {
 soong_config_module_type {
     name: "vold_hw_fde",
     module_type: "cc_defaults",
-    config_namespace: "acmeQcomVars",
+    config_namespace: "hentaiQcomVars",
     bool_variables: ["supports_hw_fde"],
     properties: [
         "cflags",
@@ -193,7 +193,7 @@ vold_hw_fde {
 soong_config_module_type {
     name: "vold_hw_fde_perf",
     module_type: "cc_defaults",
-    config_namespace: "acmeQcomVars",
+    config_namespace: "hentaiQcomVars",
     bool_variables: ["supports_hw_fde_perf"],
     properties: [
         "cflags",
@@ -214,7 +214,7 @@ vold_hw_fde_perf {
 soong_config_module_type {
     name: "surfaceflinger_qcom_extensions",
     module_type: "cc_defaults",
-    config_namespace: "acmeQcomVars",
+    config_namespace: "hentaiQcomVars",
     value_variables: ["qcom_display_headers_namespace"],
     properties: [
         "cppflags",
